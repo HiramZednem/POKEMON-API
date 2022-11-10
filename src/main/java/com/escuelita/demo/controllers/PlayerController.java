@@ -2,12 +2,15 @@ package com.escuelita.demo.controllers;
 
 import com.escuelita.demo.controllers.dtos.requests.CreatePlayerRequest;
 import com.escuelita.demo.controllers.dtos.requests.UpdatePlayerRequest;
+import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.CreatePlayerResponse;
 import com.escuelita.demo.services.interfaces.IPlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,23 +21,27 @@ public class PlayerController {
     private IPlayerService service;
 
     @GetMapping("{id}")
-    CreatePlayerResponse get (@PathVariable Long id) {
-        return service.get(id);
+    ResponseEntity<BaseResponse> get (@PathVariable Long id) {
+        BaseResponse baseResponse = service.get(id);
+        return new ResponseEntity<>(baseResponse, baseResponse.getHttpStatus());
     }
 
     @GetMapping
-    List<CreatePlayerResponse> getAll ( ) {
-        return service.getAll();
+    ResponseEntity<BaseResponse> getAll ( ) {
+        BaseResponse baseResponse = service.getAll();
+        return new ResponseEntity<BaseResponse>(baseResponse, baseResponse.getHttpStatus());
     }
 
     @PostMapping
-    CreatePlayerResponse create (@RequestBody CreatePlayerRequest request) {
-        return service.create(request);
+    ResponseEntity<BaseResponse> create (@RequestBody @Valid CreatePlayerRequest request) {
+        BaseResponse baseResponse = service.create(request);
+        return new ResponseEntity<BaseResponse>(baseResponse, baseResponse.getHttpStatus());
     }
 
     @PutMapping("{id}")
-    CreatePlayerResponse update (@PathVariable Long id, @RequestBody UpdatePlayerRequest request) {
-        return service.update(id, request);
+    ResponseEntity<BaseResponse> update (@PathVariable @Valid Long id, @RequestBody UpdatePlayerRequest request) {
+        BaseResponse baseResponse = service.update(id, request);
+        return new ResponseEntity<BaseResponse>(baseResponse, baseResponse.getHttpStatus());
     }
 
     @DeleteMapping("{id}")

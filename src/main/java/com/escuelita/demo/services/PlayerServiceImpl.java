@@ -2,11 +2,13 @@ package com.escuelita.demo.services;
 
 import com.escuelita.demo.controllers.dtos.requests.CreatePlayerRequest;
 import com.escuelita.demo.controllers.dtos.requests.UpdatePlayerRequest;
+import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.CreatePlayerResponse;
 import com.escuelita.demo.entities.Player;
 import com.escuelita.demo.repositories.IPlayerRepository;
 import com.escuelita.demo.services.interfaces.IPlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,18 +22,24 @@ public class PlayerServiceImpl implements IPlayerService {
     private IPlayerRepository repository;
 
     @Override
-    public CreatePlayerResponse get(Long id) {
+    public BaseResponse get(Long id) {
         Optional<Player> playerRepository = repository.findById(id);
 
         if (playerRepository.isPresent()) {
-            return  from(playerRepository.get());
+            CreatePlayerResponse response = from(playerRepository.get());
+            return BaseResponse.builder()
+                    .data(response)
+                    .message("Player by id")
+                    .success(Boolean.TRUE)
+                    .httpStatus(HttpStatus.OK)
+                    .build();
         }
         throw new RuntimeException("The player with id: "+ id + " doesn't exist");
 
     }
 
     @Override
-    public List<CreatePlayerResponse> getAll() {
+    public BaseResponse getAll() {
         List<CreatePlayerResponse> responses = new ArrayList<>();
         List<Player> repositoryAll = repository.findAll();
 
@@ -39,23 +47,41 @@ public class PlayerServiceImpl implements IPlayerService {
             responses.add(from(player));
         }
 
-        return responses;
+        return BaseResponse.builder()
+                .data(responses)
+                .message("List of all players")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
 
     @Override
-    public CreatePlayerResponse create(CreatePlayerRequest request) {
+    public BaseResponse create(CreatePlayerRequest request) {
         Player playerRepository = repository.save(from(request));
-        return from(playerRepository);
+        CreatePlayerResponse response = from(playerRepository);
+        return BaseResponse.builder()
+                .data(response)
+                .message("Player Created Correctly")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.CREATED)
+                .build();
     }
 
     @Override
-    public CreatePlayerResponse update(Long id, UpdatePlayerRequest request) {
+    public BaseResponse update(Long id, UpdatePlayerRequest request) {
         //This method is like this because we are trying to don't create more instances and save memory
         Optional<Player> playerRepository = repository.findById(id);
 
         if (playerRepository.isPresent()) {
             Player player = playerRepository.get();
-            return from( update(player, request) );
+            CreatePlayerResponse response = from(update(player, request));
+
+            return BaseResponse.builder()
+                    .data(response)
+                    .message("User updated correctly")
+                    .success(Boolean.TRUE)
+                    .httpStatus(HttpStatus.OK)
+                    .build();
         }
         throw new RuntimeException("The player with id: "+ id + " doesn't exist");
     }

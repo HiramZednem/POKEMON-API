@@ -13,6 +13,6 @@ public class CreatePlayerRequest {
     @NotNull @NotBlank
     private String user;
 
-    @NotNull @NotBlank @Pattern(regexp = "\"^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$\"" ) //Minimum eight characters at least one letter and one number
+    @NotNull @NotBlank @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$") //Minimum eight characters at least one letter and one number
     private String password;
 }
