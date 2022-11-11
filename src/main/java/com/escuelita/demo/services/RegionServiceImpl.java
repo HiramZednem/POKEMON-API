@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service("Region")
+@Service("region")
 public class RegionServiceImpl implements IRegionService {
     @Autowired
     private IRegionRepository repository;
