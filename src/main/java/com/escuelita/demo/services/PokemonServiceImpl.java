@@ -9,11 +9,13 @@ import com.escuelita.demo.repositories.IPokemonRepository;
 import com.escuelita.demo.services.interfaces.IPokemonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PokemonServiceImpl implements IPokemonService {
     @Autowired
     private IPokemonRepository repository;
