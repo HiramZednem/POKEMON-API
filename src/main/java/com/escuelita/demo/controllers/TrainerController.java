@@ -45,4 +45,10 @@ public class TrainerController {
     void delete (@PathVariable Long id) {
         service.delete(id);
     }
+
+    @GetMapping("player/{id}")
+    ResponseEntity<BaseResponse> getTrainerByPlayerId (@PathVariable Long id ) {
+        BaseResponse baseResponse = service.getTrainerByPlayerId(id);
+        return new ResponseEntity<>(baseResponse, baseResponse.getHttpStatus());
+    }
 }

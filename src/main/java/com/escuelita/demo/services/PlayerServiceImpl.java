@@ -8,7 +8,6 @@ import com.escuelita.demo.controllers.dtos.responses.CreateTrainerResponse;
 import com.escuelita.demo.entities.Player;
 import com.escuelita.demo.entities.Trainer;
 import com.escuelita.demo.repositories.IPlayerRepository;
-import com.escuelita.demo.repositories.ITrainerRepository;
 import com.escuelita.demo.services.interfaces.IPlayerService;
 import com.escuelita.demo.services.interfaces.ITrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +95,11 @@ public class PlayerServiceImpl implements IPlayerService {
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return repository.existsById(id);
     }
 
     private CreatePlayerResponse from (Player request) {

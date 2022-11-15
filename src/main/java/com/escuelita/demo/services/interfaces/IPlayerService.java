@@ -18,4 +18,8 @@ public interface IPlayerService {
 
     void delete (Long id);
 
+    boolean existById(Long id);
+
+
+
 }

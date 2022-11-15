@@ -18,4 +18,6 @@ public interface ITrainerService {
     void delete (Long id);
 
     Trainer findTrainerById(Long id);
+
+    BaseResponse getTrainerByPlayerId (Long id);
 }

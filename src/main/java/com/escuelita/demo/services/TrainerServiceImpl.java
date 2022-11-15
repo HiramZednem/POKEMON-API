@@ -5,9 +5,13 @@ import com.escuelita.demo.controllers.dtos.requests.UpdateTrainerRequest;
 import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.CreateTrainerResponse;
 import com.escuelita.demo.entities.Trainer;
+import com.escuelita.demo.entities.projections.TrainerProjection;
 import com.escuelita.demo.repositories.ITrainerRepository;
+import com.escuelita.demo.services.interfaces.IPlayerService;
 import com.escuelita.demo.services.interfaces.ITrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,11 @@ public class TrainerServiceImpl implements ITrainerService {
 
     @Autowired
     private ITrainerRepository repository;
+
+    @Autowired
+    @Lazy
+    @Qualifier("player")
+    private IPlayerService playerService;
 
     @Override
     public BaseResponse get(Long id) {
@@ -95,6 +104,27 @@ public class TrainerServiceImpl implements ITrainerService {
             return trainerOptional.get();
         }
         throw new RuntimeException("The trainer with the id " + id + " doesn't exist");
+    }
+
+
+    public BaseResponse getTrainerByPlayerId (Long id) {
+        if ( playerService.existById(id) ) {
+            TrainerProjection trainerByPlayerId = repository.getTrainerByPlayerId(id);
+            return BaseResponse.builder()
+                    .data(from(trainerByPlayerId))
+                    .message("Trainer by player id")
+                    .success(Boolean.TRUE)
+                    .httpStatus(HttpStatus.OK)
+                    .build();
+        }
+        throw new RuntimeException("The Player with the id " + id + " doesn't exist");
+    }
+
+    private CreateTrainerResponse from (TrainerProjection request) {
+        CreateTrainerResponse response = new CreateTrainerResponse();
+        response.setId(request.getId());
+        response.setName(request.getName());
+        return response;
     }
 
     private Trainer from (CreateTrainerRequest request) {
