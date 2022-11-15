@@ -16,4 +16,7 @@ public class Trainer {
     @Column(name = "name")
     private String name;
 
+    @OneToOne(mappedBy = "trainer")
+    private Player player;
+
 }

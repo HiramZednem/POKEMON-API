@@ -16,4 +16,8 @@ public class Player {
     private String user;
 
     private String password;
+
+    @OneToOne
+    @JoinColumn(name = "trainer_id",referencedColumnName = "id")
+    private Trainer trainer;
 }
