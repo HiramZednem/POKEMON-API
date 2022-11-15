@@ -88,6 +88,15 @@ public class TrainerServiceImpl implements ITrainerService {
         repository.deleteById(id);
     }
 
+    @Override
+    public Trainer findTrainerById(Long id) {
+        Optional<Trainer> trainerOptional = repository.findById(id);
+        if ( trainerOptional.isPresent() ) {
+            return trainerOptional.get();
+        }
+        throw new RuntimeException("The trainer with the id " + id + " doesn't exist");
+    }
+
     private Trainer from (CreateTrainerRequest request) {
         Trainer response = new Trainer();
         response.setName(request.getName());

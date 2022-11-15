@@ -7,4 +7,5 @@ import lombok.Setter;
 public class CreatePlayerResponse {
     private Long id;
     private String user;
+    private CreateTrainerResponse trainer;
 }

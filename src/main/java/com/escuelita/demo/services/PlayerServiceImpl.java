@@ -4,9 +4,13 @@ import com.escuelita.demo.controllers.dtos.requests.CreatePlayerRequest;
 import com.escuelita.demo.controllers.dtos.requests.UpdatePlayerRequest;
 import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.CreatePlayerResponse;
+import com.escuelita.demo.controllers.dtos.responses.CreateTrainerResponse;
 import com.escuelita.demo.entities.Player;
+import com.escuelita.demo.entities.Trainer;
 import com.escuelita.demo.repositories.IPlayerRepository;
+import com.escuelita.demo.repositories.ITrainerRepository;
 import com.escuelita.demo.services.interfaces.IPlayerService;
+import com.escuelita.demo.services.interfaces.ITrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,9 @@ public class PlayerServiceImpl implements IPlayerService {
 
     @Autowired
     private IPlayerRepository repository;
+
+    @Autowired
+    private ITrainerService trainerService;
 
     @Override
     public BaseResponse get(Long id) {
@@ -95,13 +102,23 @@ public class PlayerServiceImpl implements IPlayerService {
         CreatePlayerResponse response = new CreatePlayerResponse();
         response.setId(request.getId());
         response.setUser(request.getUser());
+        response.setTrainer( from(request.getTrainer()) );
         return response;
     }
 
+    private CreateTrainerResponse from (Trainer request) {
+        CreateTrainerResponse response = new CreateTrainerResponse();
+        response.setId(request.getId());
+        response.setName(request.getName());
+        return response;
+    }
     private Player from (CreatePlayerRequest request) {
         Player response = new Player();
         response.setUser(request.getUser());
         response.setPassword(request.getPassword());
+
+        Trainer trainer = trainerService.findTrainerById(request.getTrainer_id());
+        response.setTrainer(trainer);
         return response;
     }
 
